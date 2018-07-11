@@ -26,8 +26,10 @@ date_end <- as.Date("1930-05-31")
 source("code/classes/reservoir_class.R", local = TRUE)
 source("code/functions/reservoir_ops_init_func.R", local = TRUE)
 source("code/functions/reservoir_ops_today_func.R", local = TRUE)
+source("code/functions/forecasts_demands_func.R", local = TRUE)
+source("code/functions/forecasts_flows_func.R", local = TRUE)
 source("code/server/potomac_flows.R", local = TRUE)
-source("code/server/simulation.R", local = TRUE)  
+source("code/server/simulation.R", local = TRUE)
 #-----------------------------------------------------------------
 # End block temporarily pasted into global.R
 #-----------------------------------------------------------------

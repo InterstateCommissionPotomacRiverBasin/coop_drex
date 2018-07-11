@@ -7,7 +7,7 @@
 #------------------------------------------------------------------------------
 #
 # Import river flow and reservoir inflow ts:
-flow.daily.mgd.df <- data.table::fread(paste(ts_path, "flows_daily_mgd.csv", sep = ""),
+flows.daily.mgd.df <- data.table::fread(paste(ts_path, "flows_daily_mgd.csv", sep = ""),
                                       data.table = FALSE) %>%
   dplyr::mutate(date_time = as.Date(date)) %>%
   dplyr::select(sim_day, date_time,

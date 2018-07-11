@@ -1,8 +1,21 @@
 #
-# This is the server logic of a Shiny web application for the 2018 DREX.
-# Run the application by clicking 'Run App' above.
-# 
-# # Define server logic required to draw a histogram
+# Draft code map:
+#   global.R runs the following:
+#     global/load_packages.R
+#     config/paths.R
+#     global/import_data.R -
+#        flows_daily_mgd.csv -> flows.daily.mgd.df
+#        demands_daily.csv -> demands.daily.df
+#     temporarily does things to later be moved to be reactive:
+#        defines date_start and date_end
+#        runs code to define classes and functions
+#        code/server/potomac_flows.R
+#           code/server/forecasts.R
+#        code/server/simulation.R
+#
+#------------------------------------------------------------------
+# For now, restrict graphs to today + 15:
+#------------------------------------------------------------------
 
 shinyServer(function(input, output, session) {
   #
@@ -14,17 +27,18 @@ shinyServer(function(input, output, session) {
   # End block temporarily pasted into global.R
   #-----------------------------------------------------------------
   #
-
   #
   #------------------------------------------------------------------
-  # Create the graphs to be displayed by the Shiny app
+  # Create the graphs etc to be displayed by the Shiny app
   #------------------------------------------------------------------
   output$potomacFlows <- renderPlot({
-    ggplot(data = potomac.df, aes(x = date_time, y = flow_mgd, group = location)) +
+    ggplot(data = potomac.data.df, aes(x = date_time, y = flow_mgd, group = location)) +
       geom_line(aes(linetype = location, color = location, size = location)) +
-      scale_linetype_manual(values = c("dotted", "solid", "solid")) +
-      scale_size_manual(values = c(1, 3, 1)) +
-      scale_color_manual(values = c("blue", "skyblue1", "blue"))
+      scale_linetype_manual(values = c("dotted", "dotted", "solid", "solid")) +
+      scale_size_manual(values = c(1, 1, 3, 1)) +
+      scale_color_manual(values = c("blue", "red", "skyblue1", "blue")) # +
+#      geom_point(temp.df, aes(x = date_time,
+#                              y = flow_mgd, group = location))
   })
   output$por_flow <- renderValueBox({
     por_threshold <- 2000
@@ -48,7 +62,7 @@ shinyServer(function(input, output, session) {
   })
   #
   output$jrrStorageReleases <- renderPlot({
-    ggplot(data = jrr.ops.df, aes(x = date_time)) +
+    ggplot(data = jrr.ts.df, aes(x = date_time)) +
       geom_line(aes(y = stor, color = "Storage")) +
       geom_line(aes(y = rel, color = "Spill")) +
       scale_color_manual(values = c("grey", "black"))
@@ -56,7 +70,7 @@ shinyServer(function(input, output, session) {
   }) # end renderPlot
   #
   output$senStorageReleases <- renderPlot({
-    ggplot(data = sen.ops.df, aes(x = date_time)) +
+    ggplot(data = sen.ts.df, aes(x = date_time)) +
       geom_line(aes(y = stor, color = "Storage")) +
       geom_line(aes(y = rel, color = "Spill")) +
       scale_color_manual(values = c("grey", "black"))

@@ -1,17 +1,25 @@
 #------------------------------------------------------------------
+#------------------------------------------------------------------
 # This script loads in basic reservoir data, ie capacity, inflow, etc.,
-# creates reservoir "objects" (R S4 class type objects),
-# and initializes reservoir dataframe of daily storage, releases, etc.
+# creates reservoir "objects" (R S4 class type objects) to hold this data,
+# and initializes reservoir dataframes with daily time series
+#------------------------------------------------------------------
 #------------------------------------------------------------------
 #
-# Create a dataframe of reservoir inflows:
+#------------------------------------------------------------------
+# Create a dataframe of reservoir inflows
+#------------------------------------------------------------------
+# (This is not really necessary - maybe get rid of)
 #
-inflows.df <- flow.daily.mgd.df %>%
+inflows.df <- flows.daily.mgd.df %>%
   dplyr::select(date_time, jrr_in, lsen_in) %>%
   dplyr::filter(date_time <= date_end,
                 date_time >= date_start)
-# Load the basic reservoir data (later from a parameters file),
-#  and also the inflow time series:
+#
+#------------------------------------------------------------------
+# Load the basic reservoir data and inflow time series
+#------------------------------------------------------------------
+# Later want to read this from /input/parameters/*.R
 sen_cap <- 4000
 sen_stor0 <- 3000
 sen_flowby <- 3
@@ -28,7 +36,9 @@ jrr_ws_rel_req <- 300
 jrr.inflows.df <- inflows.df %>%
   select(date_time, inflows = jrr_in)
 #
-# Create objects in the reservoir class:
+#------------------------------------------------------------------
+# Create "reservoir" objects - in the reservoir class:
+#------------------------------------------------------------------
 sen <- new("Reservoir", name = "Little Seneca Reservoir", 
            capacity = sen_cap,
            stor0 = sen_stor0,
@@ -42,7 +52,9 @@ jrr <- new("Reservoir", name = "Jennings Randolph Reservoir",
 #           withdr_req = jrr_withdr_req,
            inflows = jrr.inflows.df)
 #
-# Initialize reservoir dataframes
-sen.ops.df <- reservoir_ops_init_func(sen, sen_withdr_req, sen_ws_rel_req)
-jrr.ops.df <- reservoir_ops_init_func(jrr, jrr_withdr_req, jrr_ws_rel_req)
+#------------------------------------------------------------------
+# Initialize dataframes that hold the reservoir time series (ts)
+#------------------------------------------------------------------
+sen.ts.df <- reservoir_ops_init_func(sen, sen_withdr_req, sen_ws_rel_req)
+jrr.ts.df <- reservoir_ops_init_func(jrr, jrr_withdr_req, jrr_ws_rel_req)
 
