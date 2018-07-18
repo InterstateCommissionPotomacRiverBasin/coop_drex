@@ -1,11 +1,18 @@
 #--------------------------------------------------------------------------------
 #--------------------------------------------------------------------------------
-# Define a function that provides the necessary demand forecasts
+# A function that provides the necessary demand forecasts
 #--------------------------------------------------------------------------------
 #--------------------------------------------------------------------------------
-# Returns a vector of 15 demands, beginning with today's 
+# Inputs
+#--------------------------------------------------------------------------------
+# date_sim - the current date in the simulation
+# demands.df - a df containing the demand time series
+#   (at the moment, the "forecasts" are just read from input demand ts)
+#--------------------------------------------------------------------------------
+# Output
+#--------------------------------------------------------------------------------
+# A vector of 15 demands, beginning with today's 
 #   and ending with 14 days hence.
-# At the moment just reading from the input daily demand ts.
 #
 forecasts_demands_func <- function(date_sim, demands.df){
   demands.fc.df <- demands.df %>%

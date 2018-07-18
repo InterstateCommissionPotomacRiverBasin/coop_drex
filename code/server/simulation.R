@@ -8,11 +8,11 @@
 #--------------------------------------------------------------------------------
 # Define the simulation date range and "todays" date
 #--------------------------------------------------------------------------------
-# The simulation period is currently defined in global.R. 
+# The simulation period is now defined in global.R but will be moved.
 #    Might want to add debug code to 
-#    verify that this is within the data date range.
+#    verify that date_today is within the data date range.
 # 
-date_today <- as.Date("1930-03-15") # later to be reactive
+date_today <- as.Date("1930-07-15") # later to be reactive
 sim_n <- as.numeric(as.POSIXct(date_today) - as.POSIXct(date_start),
                     units = "days")
 #
@@ -20,11 +20,15 @@ sim_n <- as.numeric(as.POSIXct(date_today) - as.POSIXct(date_start),
 # Make the reservoir objects and reservoir time series df's
 #--------------------------------------------------------------------------------
 source("code/server/reservoirs_make.R", local = TRUE) 
+# sen.ts.df - initialized with first day of ops time series
+# jrr.ts.df - initialized with first day of ops time series
 #
 #--------------------------------------------------------------------------------
-# Make the Potomac River flows dataframe
+# Make the Potomac River flow data and flow time series dataframes
 #--------------------------------------------------------------------------------
 source("code/server/potomac_flows_init.R", local = TRUE)
+# potomac.data.df - filled with all nat flow, trib flow data
+# potomac.ts.df - initialized with first day of flows
 #
 #--------------------------------------------------------------------------------
 #--------------------------------------------------------------------------------
@@ -56,11 +60,25 @@ for (i in 1:sim_n) {
                                          potomac.ts.df,
                                          demands.fc.df,
                                  potomac.data.df)
-#   forecasts.river.df <- forecasts_today_func(date_sim, potomac.ts.df)
-   sen.ts.df <- reservoir_ops_today_func(sen, sen.ts.df, 0, sen_ws_rel_req)
-   jrr.ts.df <- reservoir_ops_today_func(jrr, jrr.ts.df, jrr_withdr_req, jrr_ws_rel_req)
-#   potomac.ts.df <- potomac_flow_func()
-}
+   #
+   #-----------------------------------------------------------------------------
+   # Compute today's reservoir withdrawal & release requests
+   #-----------------------------------------------------------------------------
+   #   There are no withdrawals from Sen or JRR
+   sen_withdr_req <- 0
+   jrr_withdr_req <- 0
+   #
+   #-----------------------------------------------------------------------------
+   # Compute today's reservoir releases and storage levels
+   #-----------------------------------------------------------------------------
+   # last 2 function inputs are withdr_req & rel_req
+      sen.ts.df <- reservoir_ops_today_func(sen, sen.ts.df, 
+                                            sen_withdr_req,
+                                            20) 
+      jrr.ts.df <- reservoir_ops_today_func(jrr, jrr.ts.df,
+                                            jrr_withdr_req,
+                                            300)
+} # end of simulation loop
 #
 # *************************************************
 # This is temporary: *************

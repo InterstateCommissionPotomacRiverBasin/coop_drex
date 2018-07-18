@@ -6,7 +6,7 @@
 #     global/import_data.R -
 #        flows_daily_mgd.csv -> flows.daily.mgd.df
 #        demands_daily.csv -> demands.daily.df
-#     temporarily does things to later be moved to be reactive:
+#     then temporarily does things to later be moved to be reactive:
 #        defines date_start and date_end
 #        runs code to define classes and functions
 #        code/server/potomac_flows.R
@@ -63,16 +63,16 @@ shinyServer(function(input, output, session) {
   #
   output$jrrStorageReleases <- renderPlot({
     ggplot(data = jrr.ts.df, aes(x = date_time)) +
-      geom_line(aes(y = stor, color = "Storage")) +
-      geom_line(aes(y = rel, color = "Spill")) +
+      geom_line(aes(y = storage, color = "Storage")) +
+      geom_line(aes(y = outflow, color = "Outflow")) +
       scale_color_manual(values = c("grey", "black"))
     #    scale_linetype_manual(values = c("solid", "dotted"))
   }) # end renderPlot
   #
   output$senStorageReleases <- renderPlot({
     ggplot(data = sen.ts.df, aes(x = date_time)) +
-      geom_line(aes(y = stor, color = "Storage")) +
-      geom_line(aes(y = rel, color = "Spill")) +
+      geom_line(aes(y = storage, color = "Storage")) +
+      geom_line(aes(y = outflow, color = "Outflow")) +
       scale_color_manual(values = c("grey", "black"))
     #    scale_linetype_manual(values = c("solid", "dotted"))
   }) # end renderPlot

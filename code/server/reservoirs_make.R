@@ -1,8 +1,10 @@
 #------------------------------------------------------------------
 #------------------------------------------------------------------
-# This script loads in basic reservoir data, ie capacity, inflow, etc.,
-# creates reservoir "objects" (R S4 class type objects) to hold this data,
-# and initializes reservoir dataframes with daily time series
+# This script:
+#   a) loads in basic reservoir data, ie capacity, inflow, etc.,
+#   b) creates reservoir "objects" (R S4 class type objects) to hold this data,
+#   c) initializes reservoir dataframes with daily time series
+#       (calling reservoir_ops_init_func)
 #------------------------------------------------------------------
 #------------------------------------------------------------------
 #
@@ -23,16 +25,16 @@ inflows.df <- flows.daily.mgd.df %>%
 sen_cap <- 4000
 sen_stor0 <- 3000
 sen_flowby <- 3
-sen_withdr_req <- 10
-sen_ws_rel_req <- 3
+sen_withdr_req0 <- 10
+sen_ws_rel_req0 <- 3
 sen.inflows.df <- inflows.df %>%
   select(date_time, inflows = lsen_in)
 #
 jrr_cap <- 16000
 jrr_stor0 <- 15000
 jrr_flowby <- 120
-jrr_withdr_req <- 120
-jrr_ws_rel_req <- 300
+jrr_withdr_req0 <- 120
+jrr_ws_rel_req0 <- 300
 jrr.inflows.df <- inflows.df %>%
   select(date_time, inflows = jrr_in)
 #
@@ -55,6 +57,6 @@ jrr <- new("Reservoir", name = "Jennings Randolph Reservoir",
 #------------------------------------------------------------------
 # Initialize dataframes that hold the reservoir time series (ts)
 #------------------------------------------------------------------
-sen.ts.df <- reservoir_ops_init_func(sen, sen_withdr_req, sen_ws_rel_req)
-jrr.ts.df <- reservoir_ops_init_func(jrr, jrr_withdr_req, jrr_ws_rel_req)
+sen.ts.df <- reservoir_ops_init_func(sen, sen_withdr_req0, sen_ws_rel_req0)
+jrr.ts.df <- reservoir_ops_init_func(jrr, jrr_withdr_req0, jrr_ws_rel_req0)
 
