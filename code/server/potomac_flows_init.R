@@ -1,13 +1,16 @@
 #------------------------------------------------------------------
 #------------------------------------------------------------------
-# Create two dataframes: Potomac River inflow & outflow data
+# Create two dataframes of Potomac River flows inflow & outflow data
 #    and Potomac River simulated flow time series
 #------------------------------------------------------------------
 #------------------------------------------------------------------
 #
 #--------------------------------------------------------------------------------
-# Create dataframe of the flow data needed to simulate Potomac River flows,
-#   ie the "natural" river flows, trib inflows, withdrawals
+# Create dataframe of the data needed to compute Potomac flows 
+#--------------------------------------------------------------------------------
+#   - date_time - load in all data within date_start & date_end
+#   - por_nat, below_por, lfalls_nat - coop's "natural" flows
+#   - demands_total_unrestricted
 #--------------------------------------------------------------------------------
 potomac.data.df <- flows.daily.mgd.df %>%
   dplyr:: select(date_time, por_nat, below_por, lfalls_nat) %>%
@@ -27,9 +30,22 @@ potomac.data.df <- left_join(potomac.data.df,
 #--------------------------------------------------------------------------------
 # Create and initialize dataframe of Potomac simulated flow time series
 #--------------------------------------------------------------------------------
+#   - date_time - initialized as date_start
+#   - lfalls_nat - for QAing
+#   - demand - actual & maybe fc'd demands, incl. restrictions
+#   - lfalls_obs
+#   - sen_outflow
+#   - jrr_outflow
+#--------------------------------------------------------------------------------
 potomac.ts.df <- potomac.data.df[1,] %>%
-  mutate(lfalls_mgd = lfalls_nat - demands_total_unrestricted)
-
+  mutate(lfalls_obs = lfalls_nat - 
+           demands_total_unrestricted,
+         demand = demands_total_unrestricted,
+         sen_outflow = sen.ts.df$outflow[1],
+         jrr_outflow = jrr.ts.df$outflow[1]) %>%
+  select(date_time, lfalls_nat, demand, 
+         lfalls_obs, sen_outflow, jrr_outflow)
+#
 # Make the 9-day flow forecast, using our old empirical eq., also used in PRRISM
 #--------------------------------------------------------------------------------
 #

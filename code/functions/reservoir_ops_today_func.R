@@ -2,7 +2,7 @@
 #
 # Define a function that takes a reservoir ops dataframe and
 #   adds one row, ie, one day to the time series 
-reservoir_ops_today_func <- function(res, res.ts.df, 
+reservoir_ops_today_func <- function(date_sim, res, res.ts.df, 
                                      withdr_req, ws_rel_req){
   #
   # Implement the water balance eq. for s = beginning of period (BOP) storage:
@@ -15,7 +15,10 @@ reservoir_ops_today_func <- function(res, res.ts.df,
     cap <- res@capacity
     flowby <- res@flowby
     w_req <- withdr_req
-# Get the last row of the res.ops.df, "yesterday", 
+    # Trim the res.ts.df to make sure the last row is yesterday
+    res.ts.df <- res.ts.df %>%
+      dplyr::filter(date_time < date_sim)
+    # Get the last row of the res.ops.df, "yesterday", 
     # and read its values:
     yesterday.df <- tail(res.ts.df,1)
     yesterday_date <- yesterday.df[1,1] # yesterday's date

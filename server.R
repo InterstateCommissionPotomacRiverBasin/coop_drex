@@ -32,7 +32,7 @@ shinyServer(function(input, output, session) {
   # Create the graphs etc to be displayed by the Shiny app
   #------------------------------------------------------------------
   output$potomacFlows <- renderPlot({
-    ggplot(data = potomac.data.df, aes(x = date_time, y = flow_mgd, group = location)) +
+    ggplot(data = potomac.graph.df, aes(x = date_time, y = flow_mgd, group = location)) +
       geom_line(aes(linetype = location, color = location, size = location)) +
       scale_linetype_manual(values = c("dotted", "dotted", "solid", "solid")) +
       scale_size_manual(values = c(1, 1, 3, 1)) +
