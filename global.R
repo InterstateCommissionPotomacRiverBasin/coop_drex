@@ -22,6 +22,7 @@ source("code/global/import_data.R", local = TRUE)
 # Define the simulation period - later do this reactively:
 date_start <- as.Date("1930-01-01")
 date_end <- as.Date("1930-09-30")
+lfalls_flowby <- 100 # change to read from parameter file!!!
 #
 source("code/classes/reservoir_class.R", local = TRUE)
 source("code/functions/reservoir_ops_init_func.R", local = TRUE)

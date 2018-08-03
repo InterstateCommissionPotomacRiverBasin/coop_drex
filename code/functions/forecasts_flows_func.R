@@ -1,12 +1,12 @@
 #--------------------------------------------------------------------------------
 #--------------------------------------------------------------------------------
-# Define a function that adds flow forecasts to potomac.ts.df
+# Adds/updated flow forecasts in potomac.ts.df
 #--------------------------------------------------------------------------------
 #--------------------------------------------------------------------------------
 # Inputs
 #--------------------------------------------------------------------------------
 # date_sim = current date in the simulation
-# demands.df = forecasts of demands from date_sim to date_sim + 14
+# demands.fc.df = forecasts of demands from date_sim to date_sim + 14
 # sen_outflow_today - today's Seneca Reservoir release (total)
 # jrr_outflow_today - today's JR Reservoir release (total)
 # flow.ts.df (= potomac.ts.df) - the data frame to be updated

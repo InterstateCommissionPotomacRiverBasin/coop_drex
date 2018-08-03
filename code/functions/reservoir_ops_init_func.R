@@ -6,6 +6,7 @@
 # Inputs
 #--------------------------------------------------------------------------------
 # res - the reservoir class object which contains alot of info:
+#     The following are currently specified in reservoir_make.R
 #          res@name is the reservoir name
 #          res@capacity is the reservoir capacity
 #          res@stor0 is the initial storage on day 1 of the simulation
@@ -19,10 +20,19 @@
 #--------------------------------------------------------------------------------
 # Output
 #--------------------------------------------------------------------------------
-# dataframe with columns: date_time, stor, inflow, rel, withdr
+# dataframe res.ts.df, which has columns:
+#    date_time
+#    storage
+#    inflow
+#    outflow
+#    withdr_req - water supply withdrawal request (from intake)
+#    rel_req - water supply release request (downstream discharge)
+#    available
 #
 #--------------------------------------------------------------------------------
-reservoir_ops_init_func <- function(res, withdr_req, ws_rel_req){
+reservoir_ops_init_func <- function(res, 
+                                    withdr_req, 
+                                    ws_rel_req){
   #
   # Implement the water balance eq. for s = beginning of period (BOP) storage:
   #   s(i+1) = s(i) + inflow(i) - w(i)
@@ -39,6 +49,7 @@ reservoir_ops_init_func <- function(res, withdr_req, ws_rel_req){
   res0.df <- res@inflows[1,] %>%
     dplyr::mutate(stor = res@stor0, 
                   w = withdr_req,
+                  rel_req = ws_rel_req,
                   inflow = inflows) %>%
     dplyr::mutate(available = stor + inflow - w,
                   # rel_min = case_when(flowby > rel_req ~ flowby,
@@ -47,11 +58,11 @@ reservoir_ops_init_func <- function(res, withdr_req, ws_rel_req){
                     cap - available <= -rel_min ~ available - cap, # spill
                     cap - available > rel_min & available > rel_min ~ rel_min,
                     cap - available > rel_min & available <= rel_min ~ available),
-                  w = case_when(stor + inflow >= w ~ w,
+                  withdr_req = case_when(stor + inflow >= w ~ w,
                                 stor + inflow < w ~ stor + inflow),
                   storage = stor
     ) %>%
     dplyr::select(date_time, storage, inflow = inflows,
-                  outflow, w, available)
+                  outflow, withdr_req, rel_req, available)
   return(res0.df)
 }
