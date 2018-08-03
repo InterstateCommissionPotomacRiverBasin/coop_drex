@@ -15,7 +15,7 @@
 # We want to simulate up to date_today, and see things graphed
 #   up thru date_today + (not yet implemented) some forecasts (fcs) 
 #   up thru some period - maybe 15 days out into the future?
-date_today <- as.Date("1930-08-15") # later to be reactive
+date_today <- as.Date("1930-02-15") # later to be reactive
 sim_n <- as.numeric(as.POSIXct(date_today) - as.POSIXct(date_start),
                     units = "days")
 # 
@@ -80,8 +80,11 @@ for (sim_i in 2:sim_n + 1) { # start the simulation on the 2nd day
    #-----------------------------------------------------------------------------
    #
    # Compute ws need today - for Seneca release
-   need <- lfalls_flowby + mos_0day - lfalls_obs_today_no_ws
-   ws_need_0day <- if_else(need > 0, need, 0, missing = 0)
+   #
+   ws_need_0day <- estimate_need_func(lfalls_flow = lfalls_obs_today_no_ws,
+                                mos = mos_0day)
+   ws_need_9day <- estimate_need_func(lfalls_flow = lfalls_obs_fc9_no_ws,
+                                     mos = mos_9day)
    #
    # Compute ws need in 9 days - for N Br release
    need <- lfalls_flowby + mos_9day - lfalls_obs_fc9_no_ws
@@ -119,13 +122,16 @@ for (sim_i in 2:sim_n + 1) { # start the simulation on the 2nd day
 } # end of simulation loop
 #
 # *************************************************
-# This is temporary: *************
-graph_range <- date_today + 30
-# Convert data to "long" format for graphing:
-potomac.graph.df <- potomac.data.df %>%
+# Prepare ts for graphing:
+potomac.graph.df0 <- left_join(potomac.ts.df, 
+                               potomac.data.df, 
+                               by = "date_time") %>%
+  dplyr::select(date_time, lfalls_nat = lfalls_nat.x, 
+                por_nat, demand, lfalls_obs,
+                sen_outflow, jrr_outflow)
+potomac.graph.df <- potomac.graph.df0 %>%
   gather(key = "location", 
-         value = "flow_mgd", -date_time) %>%
-  dplyr::filter(date_time <= date_end)
+         value = "flow_mgd", -date_time) 
 # dplyr::filter(date_time <= date_today)
 # temp.df <- data.frame(date_time = date_today + 9, 
 #                       location = "test", 

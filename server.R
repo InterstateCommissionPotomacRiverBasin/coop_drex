@@ -19,27 +19,19 @@
 
 shinyServer(function(input, output, session) {
   #
-  #-----------------------------------------------------------------
-  # Block temporarily pasted into global.R - for ease of debugging
-  #-----------------------------------------------------------------
-
-  #-----------------------------------------------------------------
-  # End block temporarily pasted into global.R
-  #-----------------------------------------------------------------
-  #
-  #
   #------------------------------------------------------------------
   # Create the graphs etc to be displayed by the Shiny app
   #------------------------------------------------------------------
+  # output$potomacFlows <- renderPlot({
+  #   ggplot(data = potomac.graph.df, aes(x = date_time, y = flow_mgd, group = location)) +
+  #     geom_line(aes(linetype = location, color = location, size = location)) +
+  #     scale_linetype_manual(values = c("dotted", "dotted", "solid", "solid")) +
+  #     scale_size_manual(values = c(1, 1, 3, 1)) +
+  #     scale_color_manual(values = c("blue", "red", "skyblue1", "blue")) # +
   output$potomacFlows <- renderPlot({
     ggplot(data = potomac.graph.df, aes(x = date_time, y = flow_mgd, group = location)) +
-      geom_line(aes(linetype = location, color = location, size = location)) +
-      scale_linetype_manual(values = c("dotted", "dotted", "solid", "solid")) +
-      scale_size_manual(values = c(1, 1, 3, 1)) +
-      scale_color_manual(values = c("blue", "red", "skyblue1", "blue")) # +
-#      geom_point(temp.df, aes(x = date_time,
-#                              y = flow_mgd, group = location))
-  })
+      geom_line(aes(color = location))
+    })
   output$por_flow <- renderValueBox({
     por_threshold <- 2000
     por_flow <- 1800

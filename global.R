@@ -29,6 +29,7 @@ source("code/functions/reservoir_ops_init_func.R", local = TRUE)
 source("code/functions/reservoir_ops_today_func.R", local = TRUE)
 source("code/functions/forecasts_demands_func.R", local = TRUE)
 source("code/functions/forecasts_flows_func.R", local = TRUE)
+source("code/functions/estimate_need_func.R", local = TRUE)
 #--------------------------------------------------------------------------------
 # Make the reservoir objects and reservoir time series df's
 #--------------------------------------------------------------------------------
