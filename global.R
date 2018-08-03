@@ -28,11 +28,23 @@ source("code/functions/reservoir_ops_init_func.R", local = TRUE)
 source("code/functions/reservoir_ops_today_func.R", local = TRUE)
 source("code/functions/forecasts_demands_func.R", local = TRUE)
 source("code/functions/forecasts_flows_func.R", local = TRUE)
-source("code/functions/prelim_flows_func.R", local = TRUE)
-# source("code/server/potomac_flows.R", local = TRUE)
+#--------------------------------------------------------------------------------
+# Make the reservoir objects and reservoir time series df's
+#--------------------------------------------------------------------------------
+source("code/server/reservoirs_make.R", local = TRUE) 
+# sen.ts.df - initialized with first day of ops time series
+# jrr.ts.df - initialized with first day of ops time series
+#--------------------------------------------------------------------------------
+# Make the Potomac input data and flow time series dataframes
+#--------------------------------------------------------------------------------
+source("code/server/potomac_flows_init.R", local = TRUE)
+# potomac.data.df - filled with all nat flow, trib flow data
+# potomac.ts.df - initialized with first day of flows
+#    - contains lfalls_obs, sen_outflow, jrr_outflow
+#--------------------------------------------------------------------------------
+# Run the main script - simulation.R
+#--------------------------------------------------------------------------------
 source("code/server/simulation.R", local = TRUE)
-#-----------------------------------------------------------------
-# End block temporarily pasted into global.R
 #-----------------------------------------------------------------
 #
 #------------------------------------------------------------------------------
