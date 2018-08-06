@@ -39,7 +39,7 @@ forecasts_flows_func <- function(date_sim,
   # demands.fc.df                                  
   # sen_outflow_today
   # jrr_outflow_today
-  flows.ts.df <- potomac.ts.df
+#  flows.ts.df <- potomac.ts.df
   # End for QAing  
   #
   # First we need to get some data
@@ -67,7 +67,7 @@ forecasts_flows_func <- function(date_sim,
                   sen_outflow, jrr_outflow, jrr_outflow_lagged)
   # Add the fc row for today to potomac.ts.df
   #   first deleting any preliminary values in the df
-  flows.ts.df <- flows.ts.df %>%
+  flows.ts.df <- data.frame(flows.ts.df) %>%
     dplyr::filter(date_time < date_sim)
   flows.ts.df <- rbind(flows.ts.df, flows.fc.df)
   #

@@ -40,7 +40,7 @@ reservoir_ops_today_func <- function(date_sim, res, res.ts.df,
     w_req <- withdr_req
     rel_req <- ws_rel_req
     # Trim the res.ts.df to make sure the last row is yesterday
-    res.ts.df <- res.ts.df %>%
+        res.ts.df <- data.frame(res.ts.df) %>%
       dplyr::filter(date_time < date_sim)
     # Get the last row of the res.ops.df, "yesterday", 
     # and read its values:

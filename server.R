@@ -1,20 +1,5 @@
-#
-# Draft code map:
-#   global.R runs the following:
-#     global/load_packages.R
-#     config/paths.R
-#     global/import_data.R -
-#        flows_daily_mgd.csv -> flows.daily.mgd.df
-#        demands_daily.csv -> demands.daily.df
-#     then temporarily does things to later be moved to be reactive:
-#        defines date_start and date_end
-#        runs code to define classes and functions
-#        code/server/potomac_flows.R
-#           code/server/forecasts.R
-#        code/server/simulation.R
-#
 #------------------------------------------------------------------
-# For now, restrict graphs to today + 15:
+# 
 #------------------------------------------------------------------
 
 shinyServer(function(input, output, session) {
