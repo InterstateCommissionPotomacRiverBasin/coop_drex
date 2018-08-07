@@ -1,3 +1,4 @@
+#
 #------------------------------------------------------------------
 # 
 #------------------------------------------------------------------
@@ -14,6 +15,9 @@ shinyServer(function(input, output, session) {
   #     scale_size_manual(values = c(1, 1, 3, 1)) +
   #     scale_color_manual(values = c("blue", "red", "skyblue1", "blue")) # +
   output$potomacFlows <- renderPlot({
+    potomac.graph.df <- potomac.graph.df %>%
+      filter(date_time >= input$plot_range[1],
+             date_time <= input$plot_range[2])
     ggplot(data = potomac.graph.df, aes(x = date_time, y = flow_mgd, group = location)) +
       geom_line(aes(color = location))
     })
@@ -39,6 +43,9 @@ shinyServer(function(input, output, session) {
   })
   #
   output$jrrStorageReleases <- renderPlot({
+    jrr.ts.df <- jrr.ts.df %>%
+      filter(date_time >= input$plot_range[1],
+             date_time <= input$plot_range[2])
     ggplot(data = jrr.ts.df, aes(x = date_time)) +
       geom_line(aes(y = storage, color = "Storage")) +
       geom_line(aes(y = outflow, color = "Outflow")) +
@@ -47,6 +54,9 @@ shinyServer(function(input, output, session) {
   }) # end renderPlot
   #
   output$senStorageReleases <- renderPlot({
+    sen.ts.df <- sen.ts.df %>%
+      filter(date_time >= input$plot_range[1],
+             date_time <= input$plot_range[2])
     ggplot(data = sen.ts.df, aes(x = date_time)) +
       geom_line(aes(y = storage, color = "Storage")) +
       geom_line(aes(y = outflow, color = "Outflow")) +

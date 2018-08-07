@@ -6,7 +6,7 @@
 dashboardPage(skin = "blue",
   dashboardHeader(title = "WMA 2018 DREX"),
   dashboardSidebar(
-    width = 200,
+    width = 250,
 #    sidebarLayout(
 #      sidebarPanel(
         # sliderInput("bins",
@@ -19,7 +19,12 @@ dateInput("DREXtoday",
           value = "1930-06-01",
           min = "1929-10-02",
           max = "1931-12-31",
-          format = "yyyy-mm-dd")
+          format = "yyyy-mm-dd"),
+dateRangeInput("plot_range",
+               "Specify plot range",
+               start = "1929-10-01",
+               end = "1930-12-31",
+               width = "250px")
       ),
   dashboardBody(
     fluidRow(
