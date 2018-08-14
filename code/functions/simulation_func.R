@@ -48,13 +48,13 @@ simulation_func <- function(date_sim,
   sen.ts.df <- reservoir_ops_today_func(date_sim = date_sim,
                                         res = sen, 
                                         #                                        res.ts.df = sen.ts.df,
-                                        res.ts.df = ts[[1]],
+                                        res.ts.df = ts$sen,
                                         withdr_req = 0,
                                         ws_rel_req = 0) 
   jrr.ts.df <- reservoir_ops_today_func(date_sim = date_sim,
                                         res = jrr,
                                         #                                        res.ts.df = jrr.ts.df,
-                                        res.ts.df = ts[[2]],
+                                        res.ts.df = ts$jrr,
                                         withdr_req = 0,
                                         ws_rel_req = 0)
   #
@@ -69,7 +69,7 @@ simulation_func <- function(date_sim,
                                         demands.fc.df = demands.fc.df,
                                         sen_outflow_today = last(sen.ts.df$outflow),
                                         jrr_outflow_today = last(jrr.ts.df$outflow),
-                                        flows.ts.df = ts[[3]])
+                                        flows.ts.df = ts$flows)
   # Grab some results for use as input in next step
   lfalls_obs_today_no_ws <- last(potomac.ts.df$lfalls_obs)
   lfalls_obs_fc9_no_ws <- last(potomac.ts.df$lfalls_obs_fc9)
@@ -116,6 +116,6 @@ simulation_func <- function(date_sim,
                                         jrr_outflow_today = last(jrr.ts.df$outflow),
                                         flows.ts.df = potomac.ts.df)
   # Package up the time series in a list to return
-  temp <- list(sen.ts.df, jrr.ts.df, potomac.ts.df)
+  temp <- list(sen = sen.ts.df, jrr = jrr.ts.df, flows = potomac.ts.df)
   return(temp)  
 }

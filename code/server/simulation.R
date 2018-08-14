@@ -29,11 +29,11 @@ mos_9day <- 0 # margin of safety for N Br release
 #--------------------------------------------------------------------------------
 #--------------------------------------------------------------------------------
 #
-# Define the simulation function
+# Define the main sim function - simulates from date_start to date_today
 
 sim_main_func <- function(date_today, ts0){
-  ts <- ts0
-  for (sim_i in 2:sim_n + 1) { # start the simulation on the 2nd day
+  ts <- ts0 # this holds the time series for the day, date_start
+  for (sim_i in 2:sim_n + 1) { # start by adding the 2nd day
     date_sim <- as.Date(date_start + sim_i - 1)
     # simulation_func adds one day, date_sim, to all of the time series
     ts <- simulation_func(date_sim,
@@ -74,9 +74,12 @@ sim_add_days_func <- function(added_days, uptodate.ts){
 #
 # *************************************************
 # Grab ts and prepare for graphing:
-sen.ts.df <- data.frame(ts[1])
-jrr.ts.df <- data.frame(ts[2])
-potomac.ts.df <- data.frame(ts[3])
+# sen.ts.df <- data.frame(ts[1])
+# jrr.ts.df <- data.frame(ts[2])
+# potomac.ts.df <- data.frame(ts[3])
+sen.ts.df <- ts$sen
+jrr.ts.df <- ts$jrr
+potomac.ts.df <- ts$flows
 
 #
 potomac.graph.df0 <- left_join(potomac.ts.df, 
