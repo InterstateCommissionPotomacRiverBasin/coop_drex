@@ -8,10 +8,6 @@ shinyServer(function(input, output, session) {
   #------------------------------------------------------------------
   # Create the graphs etc to be displayed by the Shiny app
   #------------------------------------------------------------------
-   observeEvent(input$run_add, {
-     added_days <- 30
-     uptodate.ts <- sim_add_days_func(added_days, uptodate.ts)
-   })
 
   #------------------------------------------------------------------
   output$potomacFlows <- renderPlot({
