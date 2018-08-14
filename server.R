@@ -8,12 +8,12 @@ shinyServer(function(input, output, session) {
   #------------------------------------------------------------------
   # Create the graphs etc to be displayed by the Shiny app
   #------------------------------------------------------------------
-  # output$potomacFlows <- renderPlot({
-  #   ggplot(data = potomac.graph.df, aes(x = date_time, y = flow_mgd, group = location)) +
-  #     geom_line(aes(linetype = location, color = location, size = location)) +
-  #     scale_linetype_manual(values = c("dotted", "dotted", "solid", "solid")) +
-  #     scale_size_manual(values = c(1, 1, 3, 1)) +
-  #     scale_color_manual(values = c("blue", "red", "skyblue1", "blue")) # +
+   observeEvent(input$run_add, {
+     added_days <- 30
+     uptodate.ts <- sim_add_days_func(added_days, uptodate.ts)
+   })
+
+  #------------------------------------------------------------------
   output$potomacFlows <- renderPlot({
     potomac.graph.df <- potomac.graph.df %>%
       filter(date_time >= input$plot_range[1],

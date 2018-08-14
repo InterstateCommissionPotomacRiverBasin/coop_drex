@@ -16,6 +16,7 @@
 #   up thru date_today + (not yet implemented) some forecasts (fcs) 
 #   up thru some period - maybe 15 days out into the future?
 date_today <- as.Date("1930-06-01") # later to be reactive
+# date_today <- input$DREXtoday - this doesn't work
 sim_n <- as.numeric(as.POSIXct(date_today) - as.POSIXct(date_start),
                     units = "days")
 # 
@@ -44,19 +45,24 @@ for (sim_i in 2:sim_n + 1) { # start the simulation on the 2nd day
   
 } # end of simulation loop
 # Add 30 days to simulation
-sim_add_days <- 30
-date_start <- date_today
-for (sim_i in 2:sim_add_days + 1) { # start the simulation on the 2nd day
-  date_sim <- as.Date(date_start + sim_i - 1)
-  uptodate.ts <- simulation_func(date_sim,
-                                 mos_0day,
-                                 mos_9day,
-                                 demands.daily.df,
-                                 potomac.daily.df,
-                                 sen,
-                                 jrr,
-                                 uptodate.ts)
+
+sim_add_days_func <- function(added_days, uptodate.ts){
+  date_start <- last(uptodate.ts[[1]]$date_time)
+  for (sim_i in 2:added_days + 1) { # start the simulation on the 2nd day
+    date_sim <- as.Date(date_start + sim_i - 1)
+    uptodate.ts <- simulation_func(date_sim,
+                                   mos_0day,
+                                   mos_9day,
+                                   demands.daily.df,
+                                   potomac.daily.df,
+                                   sen,
+                                   jrr,
+                                   uptodate.ts)
+  }
+  return(uptodate.ts)
 }
+# added_days <- 30
+# uptodate.ts <- sim_add_days_func(added_days, uptodate.ts)
 #
 # *************************************************
 # Grab ts and prepare for graphing:

@@ -57,6 +57,7 @@ jrr <- new("Reservoir", name = "Jennings Randolph Reservoir",
 #------------------------------------------------------------------
 # Initialize dataframes that hold the reservoir time series (ts)
 #------------------------------------------------------------------
-sen.ts.df <- reservoir_ops_init_func(sen, sen_withdr_req0, sen_ws_rel_req0)
-jrr.ts.df <- reservoir_ops_init_func(jrr, jrr_withdr_req0, jrr_ws_rel_req0)
-
+sen.ts.df0 <- reservoir_ops_init_func(sen, sen_withdr_req0, sen_ws_rel_req0)
+jrr.ts.df0 <- reservoir_ops_init_func(jrr, jrr_withdr_req0, jrr_ws_rel_req0)
+sen.ts.df <- sen.ts.df0
+jrr.ts.df <- jrr.ts.df0

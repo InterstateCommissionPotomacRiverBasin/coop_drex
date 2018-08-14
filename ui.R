@@ -15,7 +15,7 @@ dashboardPage(skin = "blue",
         #             max = 50,
         #             value = 30),
 dateInput("DREXtoday",
-          "Select today's date",
+          "Change today's date",
           value = "1930-06-01",
           min = "1929-10-02",
           max = "1931-12-31",
@@ -24,9 +24,19 @@ dateRangeInput("plot_range",
                "Specify plot range",
                start = "1929-10-01",
                end = "1930-12-31",
-               width = "250px")
+               format = "yyyy-mm-dd",
+               width = NULL), #"250px"),
+actionButton("run_main",
+             "Run simulation",
+             icon = NULL,
+             width = "150px"),
+actionButton("run_add",
+             "Add days to simulation",
+             icon = NULL,
+             width = "150px")
       ),
   dashboardBody(
+
     fluidRow(
       column(
         width = 10,

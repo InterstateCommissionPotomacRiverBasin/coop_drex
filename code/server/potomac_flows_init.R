@@ -40,7 +40,7 @@ potomac.data.df <- left_join(potomac.data.df,
 #   - jrr_outflow_lagged
 #--------------------------------------------------------------------------------
 jrr_outflow_lagged_default <- 129
-potomac.ts.df <- potomac.data.df[1,] %>%
+potomac.ts.df0 <- potomac.data.df[1,] %>%
   mutate(lfalls_obs = lfalls_nat - 
            demands_total_unrestricted,
          lfalls_obs_fc9 = NA,
@@ -51,6 +51,7 @@ potomac.ts.df <- potomac.data.df[1,] %>%
   select(date_time, lfalls_nat, demand, 
          lfalls_obs, lfalls_obs_fc9,
          sen_outflow, jrr_outflow, jrr_outflow_lagged)
+potomac.ts.df <- potomac.ts.df0
 #
 # Make the 9-day flow forecast, using our old empirical eq., also used in PRRISM
 #--------------------------------------------------------------------------------
