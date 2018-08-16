@@ -116,6 +116,9 @@ simulation_func <- function(date_sim,
                                         jrr_outflow_today = last(jrr.ts.df$outflow),
                                         flows.ts.df = potomac.ts.df)
   # Package up the time series in a list to return
-  temp <- list(sen = sen.ts.df, jrr = jrr.ts.df, flows = potomac.ts.df)
-  return(temp)  
+  # temp <- list(sen = sen.ts.df, jrr = jrr.ts.df, flows = potomac.ts.df)
+  ts$sen <- sen.ts.df
+  ts$jrr <- jrr.ts.df
+  ts$flows <- potomac.ts.df
+  return(ts)  
 }

@@ -30,6 +30,7 @@ source("code/functions/reservoir_ops_today_func.R", local = TRUE)
 source("code/functions/forecasts_demands_func.R", local = TRUE)
 source("code/functions/forecasts_flows_func.R", local = TRUE)
 source("code/functions/estimate_need_func.R", local = TRUE)
+source("code/functions/sim_main_func.R", local = TRUE)
 source("code/functions/simulation_func.R", local = TRUE)
 source("code/functions/sim_add_days_func.R", local = TRUE)
 #--------------------------------------------------------------------------------

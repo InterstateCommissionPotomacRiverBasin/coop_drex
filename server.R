@@ -2,21 +2,59 @@
 #------------------------------------------------------------------
 # 
 #------------------------------------------------------------------
-
 shinyServer(function(input, output, session) {
   #
+  # Run the main simulation
+  ts0 <- list(sen = sen.ts.df0, jrr = jrr.ts.df0, flows = potomac.ts.df0)
+  ts <- sim_main_func(date_today, ts0)
+  #
+  # Now make ts reactive
+  ts <- reactiveValues(flows = ts$flows, sen = ts$sen, jrr = ts$jrr)
+  # # This doesn't work unless I initialize ts
+  # ts$flows <- potomac.ts.df0
+  # ts$sen <- sen.ts.df0
+  # ts$jrr <- jrr.ts.df0
+  #
+  observeEvent(input$run_main, {
+    ts <- sim_main_func(input$DREXtoday, ts)
+  })
+  #
+  # # Now make ts reactive
+  # ts.new <- reactiveValues()
+  # # This doesn't work unless I initialize ts
+  # ts.new$flows <- ts$flows
+  # ts.new$sen <- ts$sen
+  # ts.new$jrr <- ts$jrr
+  
+  observeEvent(input$run_add, {
+    ts <- sim_add_days_func(input$chunkofdays, ts)
+  })
   #------------------------------------------------------------------
   # Create the graphs etc to be displayed by the Shiny app
   #------------------------------------------------------------------
 
   #------------------------------------------------------------------
   output$potomacFlows <- renderPlot({
+  # Grab ts and prepare for graphing:
+  potomac.ts.df <- ts$flows
+  #
+  potomac.graph.df0 <- left_join(potomac.ts.df, 
+                                 potomac.data.df, 
+                                 by = "date_time") %>%
+    dplyr::select(date_time, lfalls_nat = lfalls_nat.x, 
+                  por_nat, demand, lfalls_obs,
+                  sen_outflow, jrr_outflow)
+  potomac.graph.df <- potomac.graph.df0 %>%
+    gather(key = "location", 
+           value = "flow_mgd", -date_time) 
+  
     potomac.graph.df <- potomac.graph.df %>%
       filter(date_time >= input$plot_range[1],
              date_time <= input$plot_range[2])
     ggplot(data = potomac.graph.df, aes(x = date_time, y = flow_mgd, group = location)) +
       geom_line(aes(color = location))
-    })
+    }) #end renderPlot for potomacFlows
+  #------------------------------------------------------------------
   output$por_flow <- renderValueBox({
     por_threshold <- 2000
     por_flow <- 1800
@@ -27,7 +65,8 @@ shinyServer(function(input, output, session) {
     )
   })
   #
-  output$lfaa_alert <- renderValueBox({
+  #------------------------------------------------------------------
+    output$lfaa_alert <- renderValueBox({
     lfaa_alert_threshold <- 800
     lfaa_alert <- 700
     valueBox(
@@ -38,28 +77,30 @@ shinyServer(function(input, output, session) {
     )
   })
   #
-  output$jrrStorageReleases <- renderPlot({
-    jrr.ts.df <- jrr.ts.df %>%
+  #------------------------------------------------------------------
+    output$jrrStorageReleases <- renderPlot({
+    jrr.graph <- ts$jrr %>%
       filter(date_time >= input$plot_range[1],
              date_time <= input$plot_range[2])
-    ggplot(data = jrr.ts.df, aes(x = date_time)) +
+    ggplot(data = jrr.graph, aes(x = date_time)) +
       geom_line(aes(y = storage, color = "Storage")) +
       geom_line(aes(y = outflow, color = "Outflow")) +
       scale_color_manual(values = c("grey", "black"))
     #    scale_linetype_manual(values = c("solid", "dotted"))
   }) # end renderPlot
   #
-  output$senStorageReleases <- renderPlot({
-    sen.ts.df <- sen.ts.df %>%
+  #------------------------------------------------------------------
+    output$senStorageReleases <- renderPlot({
+    sen.graph <- ts$sen %>%
       filter(date_time >= input$plot_range[1],
              date_time <= input$plot_range[2])
-    ggplot(data = sen.ts.df, aes(x = date_time)) +
+    ggplot(data = sen.graph, aes(x = date_time)) +
       geom_line(aes(y = storage, color = "Storage")) +
       geom_line(aes(y = outflow, color = "Outflow")) +
       scale_color_manual(values = c("grey", "black"))
     #    scale_linetype_manual(values = c("solid", "dotted"))
   }) # end renderPlot
-  
+  #------------------------------------------------------------------
   mde_map = "http://mde.maryland.gov/programs/Water/droughtinformation/Currentconditions/PublishingImages/DroughtGraphsStarting2017Apr30/Drought2018-04-30.png"
   output$MDEStatus <- renderText({c('<img src="', mde_map, '">')
   })
@@ -67,6 +108,6 @@ shinyServer(function(input, output, session) {
   vadeq_map = "http://deq1.bse.vt.edu/drought/state/images/maps/imageMapFile152838207923720.png"
   output$VADEQStatus <- renderText({c('<img src="', vadeq_map, '">')
   })
-
+  #------------------------------------------------------------------
   })
 
