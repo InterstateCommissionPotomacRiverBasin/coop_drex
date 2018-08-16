@@ -13,8 +13,9 @@
 # uptodate.ts
 #--------------------------------------------------------------------------------
 #
-sim_add_days_func <- function(added_days, uptodate.ts){
-  date_start <- last(uptodate.ts[[1]]$date_time)
+sim_add_days_func <- function(added_days, ts){
+  df1 <- ts$flows
+  date_start <- last(df1$date_time)
   for (sim_i in 2:added_days + 1) { # start the simulation on the 2nd day
     date_sim <- as.Date(date_start + sim_i - 1)
     uptodate.ts <- simulation_func(date_sim,
@@ -24,7 +25,7 @@ sim_add_days_func <- function(added_days, uptodate.ts){
                                    potomac.daily.df,
                                    sen,
                                    jrr,
-                                   uptodate.ts)
+                                   ts)
   }
-  return(uptodate.ts)
+  return(ts)
 }

@@ -4,28 +4,19 @@
 #------------------------------------------------------------------
 shinyServer(function(input, output, session) {
   #
-  # Run the main simulation
+  # Run the main simulation to the hard-coded input, date_today
   ts0 <- list(sen = sen.ts.df0, jrr = jrr.ts.df0, flows = potomac.ts.df0)
   ts <- sim_main_func(date_today, ts0)
   #
-  # Now make ts reactive
+  # Now make ts reactive, initializing to results from above
   ts <- reactiveValues(flows = ts$flows, sen = ts$sen, jrr = ts$jrr)
-  # # This doesn't work unless I initialize ts
-  # ts$flows <- potomac.ts.df0
-  # ts$sen <- sen.ts.df0
-  # ts$jrr <- jrr.ts.df0
   #
+  # Now allow a change of the simulation end date - to input$DREXtoday
   observeEvent(input$run_main, {
     ts <- sim_main_func(input$DREXtoday, ts)
   })
   #
-  # # Now make ts reactive
-  # ts.new <- reactiveValues()
-  # # This doesn't work unless I initialize ts
-  # ts.new$flows <- ts$flows
-  # ts.new$sen <- ts$sen
-  # ts.new$jrr <- ts$jrr
-  
+  # Now allow the user to add chunks of days to the simulation
   observeEvent(input$run_add, {
     ts <- sim_add_days_func(input$chunkofdays, ts)
   })
