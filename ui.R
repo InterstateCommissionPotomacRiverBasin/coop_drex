@@ -23,7 +23,7 @@ dateRangeInput("plot_range",
 
 dateInput("DREXtoday",
           "Change today's date",
-          value = "1930-07-01",
+          value = "1930-06-01",
           min = "1929-10-02",
           max = "1931-12-31",
           format = "yyyy-mm-dd"),
@@ -59,7 +59,8 @@ actionButton("run_add",
       column(
         width = 2,
         valueBoxOutput("por_flow", width = NULL),
-        valueBoxOutput("lfaa_alert", width = NULL)
+        valueBoxOutput("lfaa_alert", width = NULL),
+        valueBoxOutput("demand", width = NULL)
       )
     ), # end fluidRow with Potomac flows
     fluidRow(

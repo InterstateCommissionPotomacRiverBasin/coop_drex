@@ -15,7 +15,7 @@
 # We want to simulate up to date_today, and see things graphed
 #   up thru date_today + (not yet implemented) some forecasts (fcs) 
 #   up thru some period - maybe 15 days out into the future?
-date_today <- as.Date("1930-06-01") # later to be reactive
+date_today <- as.Date("1930-05-01") # later to be reactive
 # date_today <- input$DREXtoday - this doesn't work
 # sim_n <- as.numeric(as.POSIXct(date_today) - as.POSIXct(date_start),
 #                     units = "days")

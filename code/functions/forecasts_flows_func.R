@@ -18,6 +18,16 @@
 # Output
 #--------------------------------------------------------------------------------
 # flow.ts.df (= potomac.ts.df)
+#   - date_time
+#   - lfalls_nat
+#   - por_nat
+#   - demand
+#   - lfalls_adj = lfalls_nat + sen_outflow + jrr_outflow_lagged
+#   - lfalls_obs = lfalls_adj - demand
+#   - lfalls_obs_fc9
+#   - sen_outflow
+#   - jrr_outflow
+#   - jrr_outflow_lagged
 #--------------------------------------------------------------------------------
 #
 # For QA'ing:
@@ -52,6 +62,7 @@ forecasts_flows_func <- function(date_sim,
                   jrr_outflow = jrr_outflow_today,
                   jrr_outflow_lagged = -9999.0,
                   lfalls_nat = lfalls_nat*1.0, # somehow int - need num
+                  lfalls_adj = -9999.0,
                   lfalls_obs = -9999.0,
     # and we have enough info to make the 9-day lfalls fc
     #   though we don't have sen release in 9 days, use today's
@@ -62,8 +73,8 @@ forecasts_flows_func <- function(date_sim,
                   lfalls_obs_fc9 = lfalls_nat_fc9 + sen_outflow +
                     jrr_outflow - demands.fc.df$demands_fc[10]) %>%
                     
-    dplyr::select(date_time, lfalls_nat, demand, 
-                  lfalls_obs, lfalls_obs_fc9,
+    dplyr::select(date_time, lfalls_nat, por_nat, demand, 
+                  lfalls_adj, lfalls_obs, lfalls_obs_fc9,
                   sen_outflow, jrr_outflow, jrr_outflow_lagged)
   # Add the fc row for today to potomac.ts.df
   #   first deleting any preliminary values in the df
@@ -76,8 +87,9 @@ forecasts_flows_func <- function(date_sim,
   #
   flows.ts.df <- flows.ts.df %>% 
     dplyr::mutate(jrr_outflow_lagged = lag(jrr_outflow, 9, default = 129),
-                  lfalls_obs = lfalls_nat - demand +
-                    sen_outflow + jrr_outflow_lagged)
+                  lfalls_adj = lfalls_nat + sen_outflow + jrr_outflow_lagged,
+                  lfalls_obs = lfalls_adj - demand
+                    )
   #
   return(flows.ts.df)
 }

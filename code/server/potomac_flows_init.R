@@ -33,6 +33,7 @@ potomac.data.df <- left_join(potomac.data.df,
 #   - date_time - initialized as date_start
 #   - lfalls_nat - for QAing
 #   - demand - actual & maybe fc'd demands, incl. restrictions
+#   - lfalls_adj - lfalls "adjusted" - without effect of COOP withdrawals
 #   - lfalls_obs
 #   - lfalls_obs_fc9 - our 9-day fc for lfalls
 #   - sen_outflow
@@ -43,26 +44,17 @@ jrr_outflow_lagged_default <- 129
 potomac.ts.df0 <- potomac.data.df[1,] %>%
   mutate(lfalls_obs = lfalls_nat - 
            demands_total_unrestricted,
+         lfalls_adj = lfalls_nat,
          lfalls_obs_fc9 = NA,
          demand = demands_total_unrestricted,
          sen_outflow = sen.ts.df$outflow[1],
          jrr_outflow = jrr.ts.df$outflow[1],
          jrr_outflow_lagged = jrr_outflow_lagged_default) %>%
-  select(date_time, lfalls_nat, demand, 
-         lfalls_obs, lfalls_obs_fc9,
+  select(date_time, lfalls_nat, por_nat, demand, 
+         lfalls_adj, lfalls_obs, lfalls_obs_fc9,
          sen_outflow, jrr_outflow, jrr_outflow_lagged)
 potomac.ts.df <- potomac.ts.df0
 #
 # Make the 9-day flow forecast, using our old empirical eq., also used in PRRISM
 #--------------------------------------------------------------------------------
-#
-# Switch to "wide" format to make forecasts.
-# Right now don't want to graph LFalls 9-day fc, 
-#   just use it to determine jrr release
- # potomac.fc.df <- potomac.data.df %>%
- #    tidyr:: spread(key = "location", value = "flow_mgd", sep = NULL) %>%
- #   dplyr:: mutate(lfalls_fc_9days = 288.79*exp(0.0009*lfalls_nat))
- # #
- # potomac.final.df <- potomac.fc.df %>%
- #   gather(key = "location", value = "flow_mgd", -date_time)
-#
+

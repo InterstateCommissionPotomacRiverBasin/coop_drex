@@ -23,8 +23,6 @@ shinyServer(function(input, output, session) {
   #------------------------------------------------------------------
   # Create the graphs etc to be displayed by the Shiny app
   #------------------------------------------------------------------
-
-  #------------------------------------------------------------------
   output$potomacFlows <- renderPlot({
   # Grab ts and prepare for graphing:
   potomac.ts.df <- ts$flows
@@ -33,7 +31,8 @@ shinyServer(function(input, output, session) {
                                  potomac.data.df, 
                                  by = "date_time") %>%
     dplyr::select(date_time, lfalls_nat = lfalls_nat.x, 
-                  por_nat, demand, lfalls_obs,
+                  por_nat = por_nat.x, 
+                  demand, lfalls_obs,
                   sen_outflow, jrr_outflow)
   potomac.graph.df <- potomac.graph.df0 %>%
     gather(key = "location", 
@@ -44,27 +43,31 @@ shinyServer(function(input, output, session) {
              date_time <= input$plot_range[2])
     ggplot(data = potomac.graph.df, aes(x = date_time, y = flow_mgd, group = location)) +
       geom_line(aes(color = location))
-    }) #end renderPlot for potomacFlows
+    }) 
   #------------------------------------------------------------------
+  # Output today's flow at Point of Rocks, and compare with 2000 cfs trigger
   output$por_flow <- renderValueBox({
-    por_threshold <- 2000
-    por_flow <- 1800
+    por_threshold <- 2000 # (cfs) CO-OP's trigger for daily monitoring/reporting
+    potomac.ts.df <- ts$flows
+    por_flow <- round(last(potomac.ts.df$por_nat)*mgd_to_cfs)
     valueBox(
       value = por_flow,
-      subtitle = "Flow at Point of Rocks, cfs (Trigger for daily monitoring is 2000 cfs)",
+      subtitle = "Flow at Point of Rocks, cfs (Trigger for coop daily monitoring is 2000 cfs)",
       color = if (por_flow >= por_threshold) "green" else "yellow"
     )
   })
-  #
   #------------------------------------------------------------------
+  # The LFAA Alert stage is triggered when Pot withdr >= 0.5*flow (adj)
+  # or equivalently, when flow_adj <= 2*withdr
     output$lfaa_alert <- renderValueBox({
-    lfaa_alert_threshold <- 800
-    lfaa_alert <- 700
+    potomac.ts.df <- ts$flows
+    pot_withdr <- last(potomac.ts.df$demand)
+    flow_adj <- round(last(potomac.ts.df$lfalls_adj))
     valueBox(
-      value = lfaa_alert,
+      value = flow_adj,
       subtitle = "Little Falls adjusted flow, MGD (Trigger for LFAA Alert stage is 2 x total WMA withdrawals)",
-      color = if (lfaa_alert >= lfaa_alert_threshold)
-        "green" else "orange"
+      color = if (flow_adj <= 2.0*pot_withdr)
+        "yellow" else "green"
     )
   })
   #

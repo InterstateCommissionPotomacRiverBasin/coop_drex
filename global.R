@@ -15,6 +15,7 @@
 source("code/global/load_packages.R", local = TRUE)
 source("config/paths.R", local = TRUE)
 source("code/global/import_data.R", local = TRUE)
+source("input/parameters/parameters.R", local = TRUE)
 #
 #-----------------------------------------------------------------
 # Block temporarily pasted into global.R - for ease of debugging
